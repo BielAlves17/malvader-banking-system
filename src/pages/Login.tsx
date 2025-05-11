@@ -103,11 +103,11 @@ const Login: React.FC = () => {
                     )}
                   </div>
                   <Button className="w-full mt-4 bg-banco-600 hover:bg-banco-700" type="submit">
-                    {otpSent ? 'Entrar' : 'Solicitar Código OTP'}
+                    {otpSent ? 'Entrar' : 'Login'}
                   </Button>
                 </form>
               </TabsContent>
-              
+              {/*
               <TabsContent value="FUNCIONARIO">
                 <form onSubmit={otpSent ? handleLogin : handleRequestOTP}>
                   <div className="space-y-4">
@@ -149,10 +149,11 @@ const Login: React.FC = () => {
                     )}
                   </div>
                   <Button className="w-full mt-4 bg-banco-600 hover:bg-banco-700" type="submit">
-                    {otpSent ? 'Entrar' : 'Solicitar Código OTP'}
+                    {otpSent ? 'Entrar' : 'Login'}
                   </Button>
                 </form>
               </TabsContent>
+              */}
             </Tabs>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
