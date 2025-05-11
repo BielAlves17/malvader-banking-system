@@ -102,7 +102,7 @@ const Login: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <Button className="w-full mt-4 bg-malvader-600 hover:bg-malvader-700" type="submit">
+                  <Button className="w-full mt-4 bg-banco-600 hover:bg-banco-700" type="submit">
                     {otpSent ? 'Entrar' : 'Solicitar Código OTP'}
                   </Button>
                 </form>
@@ -148,7 +148,7 @@ const Login: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <Button className="w-full mt-4 bg-malvader-600 hover:bg-malvader-700" type="submit">
+                  <Button className="w-full mt-4 bg-banco-600 hover:bg-banco-700" type="submit">
                     {otpSent ? 'Entrar' : 'Solicitar Código OTP'}
                   </Button>
                 </form>

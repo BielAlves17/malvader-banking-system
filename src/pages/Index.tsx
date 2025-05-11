@@ -12,7 +12,7 @@ const Index = () => {
     <Layout title="">
       <div className="min-h-[70vh] flex flex-col justify-center items-center">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-malvader-600 to-malvader-800 text-transparent bg-clip-text">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-banco-600 to-banco-800 text-transparent bg-clip-text">
             BANCO MALVADER
           </h1>
           <p className="text-xl text-gray-600 max-w-xl mx-auto">
@@ -20,11 +20,11 @@ const Index = () => {
           </p>
         </div>
 
-        <Card className="w-full max-w-4xl shadow-lg border-malvader-200">
+        <Card className="w-full max-w-4xl shadow-lg border-banco-200">
           <CardContent className="p-0">
             <div className="grid md:grid-cols-2">
-              <div className="bg-malvader-50 p-8 flex flex-col justify-center">
-                <h2 className="text-3xl font-semibold text-malvader-800 mb-4">Bem-vindo ao sistema bancário</h2>
+              <div className="bg-banco-50 p-8 flex flex-col justify-center">
+                <h2 className="text-3xl font-semibold text-gray-900 mb-4">Bem-vindo ao sistema bancário</h2>
                 <p className="mb-6 text-gray-600">
                   Entre agora para gerenciar suas finanças, realizar transações e acessar 
                   todos os serviços que o Banco Malvader tem a oferecer.
@@ -32,14 +32,14 @@ const Index = () => {
                 <div className="mt-4">
                   <Button 
                     onClick={() => navigate('/login')}
-                    className="bg-malvader-600 hover:bg-malvader-700 text-white px-8 py-6 text-lg"
+                    className="bg-banco-600 hover:bg-banco-700 text-white px-8 py-6 text-lg"
                   >
                     Acessar Sistema
                   </Button>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-malvader-600 to-malvader-900 text-white p-8">
+              <div className="bg-gradient-to-br from-banco-600 to-banco-900 text-white p-8">
                 <h3 className="text-2xl font-semibold mb-4">Recursos do Sistema</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">

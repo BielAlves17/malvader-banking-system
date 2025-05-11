@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-malvader-800 to-malvader-600 text-white p-4 shadow-md">
+      <header className="bg-gradient-to-r from-banco-800 to-banco-600 text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold">BANCO MALVADER</h1>
@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
             <div className="flex items-center space-x-2">
               <Button 
                 variant="ghost" 
-                className="text-white hover:bg-malvader-700"
+                className="text-white hover:bg-banco-700"
                 onClick={logout}
               >
                 <LogOut size={18} className="mr-2" /> Sair
@@ -54,13 +54,13 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
       <div className="flex flex-1">
         {/* Sidebar for authenticated users */}
         {isAuthenticated && (
-          <aside className="bg-malvader-900 text-white w-64 p-4 hidden md:block">
+          <aside className="bg-gray-900 text-white w-64 p-4 hidden md:block">
             <nav className="space-y-2">
               {menuItems.map((item, index) => (
                 <Button 
                   key={index} 
                   variant="ghost" 
-                  className="w-full flex items-center justify-start text-white hover:bg-malvader-800"
+                  className="w-full flex items-center justify-start text-white hover:bg-gray-800"
                   onClick={() => navigate(item.path)}
                 >
                   <span className="mr-2">{item.icon}</span>
@@ -79,7 +79,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
       </div>
 
       {/* Footer */}
-      <footer className="bg-malvader-900 text-white p-4 text-center">
+      <footer className="bg-gray-900 text-white p-4 text-center">
         <div className="container mx-auto">
           <p>&copy; 2025 Banco Malvader - Todos os direitos reservados</p>
         </div>

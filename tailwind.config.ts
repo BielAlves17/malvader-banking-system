@@ -63,19 +63,32 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Customizando para Banco Malvader
-				malvader: {
-					50: '#f5f3ff',
-					100: '#ede9fe',
-					200: '#ddd6fe',
-					300: '#c4b5fd',
-					400: '#a78bfa',
-					500: '#8b5cf6',
-					600: '#7c3aed',
-					700: '#6d28d9',
-					800: '#5b21b6',
-					900: '#4c1d95',
+				// Nova paleta de cores para o Banco Malvader
+				banco: {
+					50: '#FFF8F0',
+					100: '#FFECD6',
+					200: '#FFD6AD',
+					300: '#FFBF85',
+					400: '#FFA95C',
+					500: '#FF9333', // Laranja principal
+					600: '#F97316', // Laranja mais escuro
+					700: '#D86207',
+					800: '#B45309',
+					900: '#8A4009',
 				},
+				// Tons de cinza para apoio
+				gray: {
+					50: '#F9FAFB',
+					100: '#F3F4F6',
+					200: '#E5E7EB',
+					300: '#D1D5DB',
+					400: '#9CA3AF',
+					500: '#6B7280',
+					600: '#4B5563',
+					700: '#374151',
+					800: '#1F2937',
+					900: '#111827',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
