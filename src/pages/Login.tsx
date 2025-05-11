@@ -103,7 +103,7 @@ const Login: React.FC = () => {
                     )}
                   </div>
                   <Button className="w-full mt-4 bg-banco-600 hover:bg-banco-700" type="submit">
-                    {otpSent ? 'Entrar' : 'Login'}
+                    {otpSent ? 'Entrar' : 'Enviar codigo para meu celular'}
                   </Button>
                 </form>
               </TabsContent>
