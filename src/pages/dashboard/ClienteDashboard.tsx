@@ -2,6 +2,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useAccounts } from '@/hooks/useAccounts';
+import { useTransactions } from '@/hooks/useTransactions';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,49 +12,43 @@ import { CreditCard, ArrowUpRight, ArrowDownLeft, Clock, PiggyBank, BarChart3, E
 const ClienteDashboard = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const { data: accounts = [], isLoading: accountsLoading } = useAccounts();
+  const { data: transactions = [], isLoading: transactionsLoading } = useTransactions(5);
 
-  // Dados simulados das contas
-  const contas = [
-    {
-      id: 1,
-      tipo: 'CORRENTE',
-      numero: '123456-7',
-      saldo: 2500.75,
-      limite: 1000,
-    },
-    {
-      id: 2,
-      tipo: 'POUPANCA',
-      numero: '765432-1',
-      saldo: 15000,
-      rendimento: '0.3%',
+  // Calculate total balance from all accounts
+  const totalBalance = accounts.reduce((sum, account) => sum + Number(account.balance), 0);
+
+  // Format currency
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
+  };
+
+  // Format transaction type for display
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'DEPOSITO':
+        return <ArrowDownLeft className="h-5 w-5 text-green-600" />;
+      case 'SAQUE':
+        return <ArrowUpRight className="h-5 w-5 text-red-600" />;
+      case 'TRANSFERENCIA':
+        return <ArrowUpRight className="h-5 w-5 text-blue-600" />;
+      default:
+        return <ArrowUpRight className="h-5 w-5 text-gray-600" />;
     }
-  ];
+  };
 
-  // Dados simulados das transações recentes
-  const transacoes = [
-    {
-      id: 1,
-      descricao: 'Supermercado XYZ',
-      tipo: 'SAQUE',
-      valor: 150.75,
-      data: '2025-05-08 14:32:15',
-    },
-    {
-      id: 2,
-      descricao: 'Transferência para João',
-      tipo: 'TRANSFERENCIA',
-      valor: 500,
-      data: '2025-05-07 09:15:22',
-    },
-    {
-      id: 3,
-      descricao: 'Pagamento de Salário',
-      tipo: 'DEPOSITO',
-      valor: 3200,
-      data: '2025-05-05 00:00:01',
-    },
-  ];
+  if (accountsLoading || transactionsLoading) {
+    return (
+      <Layout title="Carregando...">
+        <div className="flex items-center justify-center p-8">
+          <p>Carregando dados...</p>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout title={`Olá, ${profile?.full_name || user?.email || 'Cliente'}`}>
@@ -63,8 +59,10 @@ const ClienteDashboard = () => {
             <PiggyBank className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ 17.500,75</div>
-            <p className="text-xs text-muted-foreground">Atualizado em: 10/05/2025</p>
+            <div className="text-2xl font-bold">{formatCurrency(totalBalance)}</div>
+            <p className="text-xs text-muted-foreground">
+              Atualizado em: {new Date().toLocaleDateString('pt-BR')}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -73,18 +71,18 @@ const ClienteDashboard = () => {
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">32</div>
-            <p className="text-xs text-muted-foreground">+5% em relação ao mês anterior</p>
+            <div className="text-2xl font-bold">{transactions.length}</div>
+            <p className="text-xs text-muted-foreground">Transações recentes</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Score de Crédito</CardTitle>
+            <CardTitle className="text-sm font-medium">Contas Ativas</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">780</div>
-            <p className="text-xs text-muted-foreground">Bom</p>
+            <div className="text-2xl font-bold">{accounts.length}</div>
+            <p className="text-xs text-muted-foreground">Contas bancárias</p>
           </CardContent>
         </Card>
       </div>
@@ -96,44 +94,46 @@ const ClienteDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {contas.map((conta) => (
-                <div key={conta.id} className="bg-muted p-4 rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center">
-                      <CreditCard className="h-5 w-5 mr-2 text-malvader-600" />
-                      <h3 className="font-semibold">{conta.tipo === 'CORRENTE' ? 'Conta Corrente' : 'Conta Poupança'}</h3>
-                    </div>
-                    <span className="text-xs bg-malvader-100 text-malvader-800 py-1 px-2 rounded-full">
-                      {conta.numero}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Saldo Disponível</p>
-                      <p className="text-xl font-bold">R$ {conta.saldo.toFixed(2)}</p>
-                    </div>
-                    {conta.tipo === 'CORRENTE' ? (
-                      <div>
-                        <p className="text-sm text-muted-foreground">Limite</p>
-                        <p className="text-lg">R$ {conta.limite.toFixed(2)}</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-sm text-muted-foreground">Rendimento</p>
-                        <p className="text-lg">{conta.rendimento} a.m.</p>
-                      </div>
-                    )}
-                    <Button variant="outline" size="sm" className="ml-2">
-                      <Eye className="h-4 w-4 mr-1" /> Detalhes
-                    </Button>
-                  </div>
+              {accounts.length === 0 ? (
+                <div className="text-center p-4">
+                  <p className="text-muted-foreground">Nenhuma conta encontrada</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Entre em contato com um funcionário para criar sua primeira conta
+                  </p>
                 </div>
-              ))}
-              <div className="flex justify-center mt-4">
-                <Button className="bg-malvader-600 hover:bg-malvader-700" onClick={() => navigate('/minhas-contas')}>
-                  Ver Todas as Contas
-                </Button>
-              </div>
+              ) : (
+                accounts.map((account) => (
+                  <div key={account.id} className="bg-muted p-4 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center">
+                        <CreditCard className="h-5 w-5 mr-2 text-banco-600" />
+                        <h3 className="font-semibold">
+                          {account.account_type === 'CORRENTE' ? 'Conta Corrente' : 'Conta Poupança'}
+                        </h3>
+                      </div>
+                      <span className="text-xs bg-banco-100 text-banco-800 py-1 px-2 rounded-full">
+                        {account.account_number}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Saldo Disponível</p>
+                        <p className="text-xl font-bold">{formatCurrency(Number(account.balance))}</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="ml-2">
+                        <Eye className="h-4 w-4 mr-1" /> Detalhes
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+              {accounts.length > 0 && (
+                <div className="flex justify-center mt-4">
+                  <Button className="bg-banco-600 hover:bg-banco-700" onClick={() => navigate('/minhas-contas')}>
+                    Ver Todas as Contas
+                  </Button>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -144,52 +144,57 @@ const ClienteDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {transacoes.map((transacao) => (
-                <div key={transacao.id} className="flex items-center justify-between p-3 border-b">
-                  <div className="flex items-center">
-                    {transacao.tipo === 'DEPOSITO' ? (
-                      <div className="mr-3 bg-green-100 p-2 rounded-full">
-                        <ArrowDownLeft className="h-5 w-5 text-green-600" />
+              {transactions.length === 0 ? (
+                <div className="text-center p-4">
+                  <p className="text-muted-foreground">Nenhuma transação encontrada</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Suas transações aparecerão aqui
+                  </p>
+                </div>
+              ) : (
+                transactions.map((transaction) => (
+                  <div key={transaction.id} className="flex items-center justify-between p-3 border-b">
+                    <div className="flex items-center">
+                      <div className="mr-3 bg-gray-100 p-2 rounded-full">
+                        {getTransactionIcon(transaction.type)}
                       </div>
-                    ) : (
-                      <div className="mr-3 bg-red-100 p-2 rounded-full">
-                        <ArrowUpRight className="h-5 w-5 text-red-600" />
+                      <div>
+                        <p className="font-medium">{transaction.description || 'Transação'}</p>
+                        <p className="text-xs text-muted-foreground flex items-center">
+                          <Clock className="h-3 w-3 mr-1" />
+                          {new Date(transaction.created_at).toLocaleDateString('pt-BR')}
+                        </p>
                       </div>
-                    )}
-                    <div>
-                      <p className="font-medium">{transacao.descricao}</p>
-                      <p className="text-xs text-muted-foreground flex items-center">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {new Date(transacao.data).toLocaleDateString('pt-BR')}
+                    </div>
+                    <div className={`text-right ${transaction.type === 'DEPOSITO' ? 'text-green-600' : 'text-red-600'}`}>
+                      <p className="font-semibold">
+                        {transaction.type === 'DEPOSITO' ? '+' : '-'} {formatCurrency(Number(transaction.amount))}
                       </p>
+                      <p className="text-xs">{transaction.type}</p>
                     </div>
                   </div>
-                  <div className={`text-right ${transacao.tipo === 'DEPOSITO' ? 'text-green-600' : 'text-red-600'}`}>
-                    <p className="font-semibold">
-                      {transacao.tipo === 'DEPOSITO' ? '+' : '-'} R$ {transacao.valor.toFixed(2)}
-                    </p>
-                    <p className="text-xs">{transacao.tipo}</p>
-                  </div>
+                ))
+              )}
+              {transactions.length > 0 && (
+                <div className="flex justify-center mt-4">
+                  <Button variant="outline" onClick={() => navigate('/extrato')}>
+                    Ver Extrato Completo
+                  </Button>
                 </div>
-              ))}
-              <div className="flex justify-center mt-4">
-                <Button variant="outline" onClick={() => navigate('/extrato')}>
-                  Ver Extrato Completo
-                </Button>
-              </div>
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Button className="flex items-center justify-center p-6 bg-malvader-600 hover:bg-malvader-700">
+        <Button className="flex items-center justify-center p-6 bg-banco-600 hover:bg-banco-700">
           <ArrowUpRight className="h-5 w-5 mr-2" /> Nova Transferência
         </Button>
-        <Button className="flex items-center justify-center p-6 bg-malvader-600 hover:bg-malvader-700">
+        <Button className="flex items-center justify-center p-6 bg-banco-600 hover:bg-banco-700">
           <ArrowDownLeft className="h-5 w-5 mr-2" /> Depósito
         </Button>
-        <Button className="flex items-center justify-center p-6 bg-malvader-600 hover:bg-malvader-700">
+        <Button className="flex items-center justify-center p-6 bg-banco-600 hover:bg-banco-700">
           <Eye className="h-5 w-5 mr-2" /> Consultar Limite
         </Button>
       </div>
