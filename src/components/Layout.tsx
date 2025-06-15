@@ -3,26 +3,34 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from "@/components/ui/button";
-import { LogOut, Home, Users, CreditCard, PieChart, Settings, User } from 'lucide-react';
+import { LogOut, Home, Users, CreditCard, PieChart, Settings, User, Briefcase } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
   title?: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) => {
-  const { isAuthenticated, logout } = useAuth();
+const Layout: React.FC<LayoutProps> = ({ children, title }) => {
+  const { isAuthenticated, logout, user, profile } = useAuth();
   const navigate = useNavigate();
 
-  // Note: Role-based menu is temporarily simplified to show client view.
-  // We will restore employee/client menus once we load user profiles from the database.
-  const menuItems = isAuthenticated
-    ? [
-        { icon: <Home size={20} />, text: 'Início', path: '/dashboard/cliente' },
-        { icon: <CreditCard size={20} />, text: 'Minhas Contas', path: '/minhas-contas' },
-        { icon: <User size={20} />, text: 'Meu Perfil', path: '/perfil' },
-      ]
-    : [];
+  const clientMenuItems = [
+    { icon: <Home size={20} />, text: 'Início', path: '/dashboard/cliente' },
+    { icon: <CreditCard size={20} />, text: 'Minhas Contas', path: '/minhas-contas' },
+    { icon: <User size={20} />, text: 'Meu Perfil', path: '/perfil' },
+  ];
+  
+  const employeeMenuItems = [
+    { icon: <Home size={20} />, text: 'Início', path: '/dashboard/funcionario' },
+    { icon: <Users size={20} />, text: 'Clientes', path: '/clientes' },
+    { icon: <CreditCard size={20} />, text: 'Contas', path: '/contas' },
+    { icon: <PieChart size={20} />, text: 'Relatórios', path: '/relatorios' },
+    { icon: <Briefcase size={20} />, text: 'Funcionários', path: '/funcionarios' },
+    { icon: <Settings size={20} />, text: 'Configurações', path: '/configuracoes' },
+  ];
+
+  const menuItems = profile?.role === 'funcionario' ? employeeMenuItems : clientMenuItems;
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -33,7 +41,10 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
             <h1 className="text-2xl font-bold">BANCO MALVADER</h1>
           </div>
           {isAuthenticated && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
+              <span className="hidden sm:inline">
+                Olá, {profile?.full_name || user?.email}
+              </span>
               <Button 
                 variant="ghost" 
                 className="text-white hover:bg-banco-700"
@@ -49,7 +60,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
       {/* Main Content */}
       <div className="flex flex-1">
         {/* Sidebar for authenticated users */}
-        {isAuthenticated && (
+        {isAuthenticated && profile && (
           <aside className="bg-gray-900 text-white w-64 p-4 hidden md:block">
             <nav className="space-y-2">
               {menuItems.map((item, index) => (
@@ -68,8 +79,8 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) =
         )}
 
         {/* Page content */}
-        <main className="flex-1 p-6">
-          {title && <h2 className="text-2xl font-semibold mb-6">{title}</h2>}
+        <main className="flex-1 p-6 bg-gray-50">
+          {title && <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>}
           {children}
         </main>
       </div>

@@ -1,14 +1,26 @@
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-// The Supabase URL and Anon Key are expected to be available as environment variables.
-// The Lovable platform injects these automatically when you connect a Supabase project.
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+let supabase: SupabaseClient;
+let supabaseError: string | null = null;
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Supabase credentials are not configured. Please ensure your project is correctly connected to Supabase in the project settings.");
+  const errorMessage = "Credenciais do Supabase não configuradas. Por favor, reconecte seu projeto ao Supabase nas configurações para injetar as chaves de API.";
+  console.error(errorMessage);
+  supabaseError = errorMessage;
+  // Cria um cliente dummy para evitar que a aplicação quebre.
+  // Todas as operações do Supabase falharão, o que é esperado.
+  supabase = createClient('https://dummy.url', 'dummy.key', {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
+} else {
+  supabase = createClient(supabaseUrl, supabaseAnonKey)
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
+export { supabase, supabaseError }

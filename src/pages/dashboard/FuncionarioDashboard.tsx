@@ -8,11 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Users, CreditCard, AlertCircle, FileText, Clock, Plus, FileDown } from 'lucide-react';
 
 const FuncionarioDashboard = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <Layout title={`Olá, ${user?.email || 'Funcionário'}`}>
+    <Layout title={`Olá, ${profile?.full_name || user?.email || 'Funcionário'}`}>
       <div className="mb-8">
         <Card className="bg-gradient-to-r from-malvader-800 to-malvader-900 text-white border-none">
           <CardContent className="p-6">
