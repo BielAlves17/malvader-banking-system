@@ -11,22 +11,18 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, title = "Banco Malvader" }) => {
-  const { isAuthenticated, logout, userType } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
-  const menuItems = userType === 'FUNCIONARIO' 
+  // Note: Role-based menu is temporarily simplified to show client view.
+  // We will restore employee/client menus once we load user profiles from the database.
+  const menuItems = isAuthenticated
     ? [
-        { icon: <Home size={20} />, text: 'Início', path: '/dashboard/funcionario' },
-        { icon: <Users size={20} />, text: 'Clientes', path: '/clientes' },
-        { icon: <CreditCard size={20} />, text: 'Contas', path: '/contas' },
-        { icon: <PieChart size={20} />, text: 'Relatórios', path: '/relatorios' },
-        { icon: <Settings size={20} />, text: 'Configurações', path: '/configuracoes' },
-      ]
-    : [
         { icon: <Home size={20} />, text: 'Início', path: '/dashboard/cliente' },
         { icon: <CreditCard size={20} />, text: 'Minhas Contas', path: '/minhas-contas' },
         { icon: <User size={20} />, text: 'Meu Perfil', path: '/perfil' },
-      ];
+      ]
+    : [];
 
   return (
     <div className="min-h-screen flex flex-col">

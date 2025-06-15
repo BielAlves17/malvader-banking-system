@@ -12,7 +12,7 @@ const FuncionarioDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout title={`Olá, ${user?.nome || 'Funcionário'}`}>
+    <Layout title={`Olá, ${user?.email || 'Funcionário'}`}>
       <div className="mb-8">
         <Card className="bg-gradient-to-r from-malvader-800 to-malvader-900 text-white border-none">
           <CardContent className="p-6">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -55,7 +54,7 @@ const ClienteDashboard = () => {
   ];
 
   return (
-    <Layout title={`Olá, ${user?.nome || 'Cliente'}`}>
+    <Layout title={`Olá, ${user?.email || 'Cliente'}`}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
