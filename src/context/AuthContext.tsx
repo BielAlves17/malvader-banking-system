@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // Don't sign out here, let the user stay on public pages
         } else {
           console.log('Profile found:', userProfile);
-          setProfile(userProfile);
+          setProfile(userProfile as Profile);
         }
       }
       setLoading(false);
@@ -95,7 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               await supabase.auth.signOut();
             } else {
               console.log('Profile loaded after sign in:', userProfile);
-              setProfile(userProfile);
+              setProfile(userProfile as Profile);
               if (userProfile.role === 'funcionario') {
                 navigate('/dashboard/funcionario');
               } else {
