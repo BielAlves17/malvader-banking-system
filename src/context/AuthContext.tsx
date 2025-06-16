@@ -58,8 +58,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           .single();
         
         if (error) {
-          console.error("Error fetching profile on initial load:", error);
-          // Don't sign out here, let the user stay on public pages
+          console.log("Profile not found, creating default profile for presentation mode:", error);
+          // Criar um perfil padrão para modo apresentação
+          const defaultProfile: Profile = {
+            id: currentUser.id,
+            full_name: currentUser.email?.split('@')[0] || 'Usuário',
+            role: 'cliente',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          setProfile(defaultProfile);
         } else {
           console.log('Profile found:', userProfile);
           setProfile(userProfile as Profile);
@@ -90,9 +98,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               .single();
 
             if (error) {
-              console.error('Error fetching profile on sign in:', error);
-              toast.error("Perfil de usuário não encontrado. Desconectando.");
-              await supabase.auth.signOut();
+              console.log('Profile not found, creating default profile for presentation mode:', error);
+              // Criar um perfil padrão sem desconectar o usuário
+              const defaultProfile: Profile = {
+                id: currentUser.id,
+                full_name: currentUser.email?.split('@')[0] || 'Usuário',
+                role: 'cliente',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              };
+              setProfile(defaultProfile);
+              toast.success('Perfil criado para modo apresentação');
+              navigate('/dashboard/cliente');
             } else {
               console.log('Profile loaded after sign in:', userProfile);
               setProfile(userProfile as Profile);
